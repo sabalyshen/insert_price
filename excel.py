@@ -7,68 +7,56 @@ from openpyxl import load_workbook
 wb2 = load_workbook(filename = '8-1-一般-ETAG.xlsx')
 ws2 = wb2['101年度大隊黏貼憑證用紙']
 
+# 依照項次加入品名
+list_name = []
+def wordfinder_name(searchString):
+    for i in range(1, ws.max_row):
+        for j in range(1, ws.max_column):
+            if searchString == ws.cell(i,j).value:
+                list_name.append(ws.cell(i,j + 2).value)
+                ws2.cell(len(list_name) + 20, 1).value = ws.cell(i,j + 2).value
 
-#TEST
-list = []
-
-# 依照項次加入清單
+# 依照項次加入單價
+list_price = []
 def wordfinder(searchString):
     for i in range(1, ws.max_row):
         for j in range(1, ws.max_column):
             if searchString == ws.cell(i,j).value:
-                list.append(ws.cell(i,j + 3).value)
-                ws2.cell(len(list) + 20, 13).value = ws.cell(i,j + 3).value
+                list_price.append(ws.cell(i,j + 5).value)
+                ws2.cell(len(list_price) + 20, 13).value = ws.cell(i,j + 5).value
 
-'''def insert_price(list_name):
-    for d in range(len(list_name)):
-        for l in list_name:
-           
-            ws2.cell(d + 21, 13).value = l'''
-           
-            
-wordfinder("one")
-#insert_price(list)
-wb2.save(filename = '8-1-一般-ETAG.xlsx')   
-print(list) 
-print(len(list))
+# 依照項次加入數量
+list_quantity = []
+def wordfinder_quantity(searchString):
+    for i in range(1, ws.max_row):
+        for j in range(1, ws.max_column):
+            if searchString == ws.cell(i,j).value:
+                list_quantity.append(ws.cell(i,j + 4).value)
+                ws2.cell(len(list_quantity) + 20, 10).value = ws.cell(i,j + 4).value
 
+# 依照項次加入單位
+list_type = []
+def wordfinder_type(searchString):
+    for i in range(1, ws.max_row):
+        for j in range(1, ws.max_column):
+            if searchString == ws.cell(i,j).value:
+                list_type.append(ws.cell(i,j + 3).value)
+                ws2.cell(len(list_type) + 20, 10).value = ws.cell(i,j + 3).value
+
+
+d = input('請輸入項次:')
+wordfinder(d)
+wordfinder_quantity(d)
+wordfinder_name(d)
+wordfinder_type(d)
+wb2.save(filename = '成品.xlsx')  
+
+ws2.cell(29, 1).value = '2. ■本案經詢價擬以' + 'ws2.cell(27, 17).value' + '元交由   交通部高速公路局  辦理，並經驗收合格後付款。' 
+print(list_price) 
+print(len(list_price))
+wb2.save(filename = '成品.xlsx')  
  
 '''
-ws.cell(i,j + 3).value
-wordfinder("one")
-insert_price(list)
-wb2.save(filename = '8-1-一般-ETAG.xlsx')
-
-wb2.save(filename = '8-1-一般-ETAG.xlsx')
-
-for p in range(21, ws2.max_column):
-    for l in list:
-        l = int(l)
-        p = l
-        print(l)
-wb2.save(filename = '8-1-一般-ETAG.xlsx')
-
-#抓檔案
-colname = {}
-current = 0
-for a in ws.iter_cols(1, ws.max_column): #1是開始值
-    colname[a[0].value] = current
-    current += 1
-
-colname1 = {}
-current1 = 0
-for b in ws2.iter_cols(13):
-    colname1[b[0].value] = current1
-    current1 += 1
-print(colname1)
-
-
-for row_cells in ws.iter_rows(1, ws.max_row):
-    if row_cells[colname['no.']].value == 1: 
-
-
-   
-
 清單金額填到請示單
 
 mon = a.value // 10000
@@ -109,9 +97,7 @@ elif ju == 0 and hyaku > 0:
 elif ju == 0:
     ws2['N6'].value = None
 ws2['O6'].value = enn
-
-wb2.save(filename = '8-1-一般-ETAG.xlsx') 
-    
+   
  ''' 
 
 
