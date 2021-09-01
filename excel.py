@@ -17,39 +17,39 @@ def wordfinder(searchString):
         for j in range(1, ws.max_column):
             if searchString == ws.cell(i,j).value:
                 list.append(ws.cell(i,j + 3).value)
-                        
-def insert_price(list_name):
+                ws2.cell(len(list) + 20, 13).value = ws.cell(i,j + 3).value
+
+'''def insert_price(list_name):
     for d in range(len(list_name)):
         for l in list_name:
-            ws2.cell(d + 21, 13).value = l
-            print(l)
-            count = 1
-            while count > len(list_name):
-                count += 1
-                break
+           
+            ws2.cell(d + 21, 13).value = l'''
+           
             
 wordfinder("one")
-insert_price(list)
-wb2.save(filename = '8-1-一般-ETAG.xlsx')                        
+#insert_price(list)
+wb2.save(filename = '8-1-一般-ETAG.xlsx')   
+print(list) 
+print(len(list))
 
  
-
-#ws.cell(i,j + 3).value
+'''
+ws.cell(i,j + 3).value
 wordfinder("one")
 insert_price(list)
 wb2.save(filename = '8-1-一般-ETAG.xlsx')
 
-#wb2.save(filename = '8-1-一般-ETAG.xlsx')
+wb2.save(filename = '8-1-一般-ETAG.xlsx')
 
-'''for p in range(21, ws2.max_column):
+for p in range(21, ws2.max_column):
     for l in list:
         l = int(l)
         p = l
-        print(l)'''
-'''wb2.save(filename = '8-1-一般-ETAG.xlsx')'''
+        print(l)
+wb2.save(filename = '8-1-一般-ETAG.xlsx')
 
 #抓檔案
-'''colname = {}
+colname = {}
 current = 0
 for a in ws.iter_cols(1, ws.max_column): #1是開始值
     colname[a[0].value] = current
@@ -60,17 +60,17 @@ current1 = 0
 for b in ws2.iter_cols(13):
     colname1[b[0].value] = current1
     current1 += 1
-print(colname1)'''
+print(colname1)
 
 
-'''for row_cells in ws.iter_rows(1, ws.max_row):
-    if row_cells[colname['no.']].value == 1: '''
+for row_cells in ws.iter_rows(1, ws.max_row):
+    if row_cells[colname['no.']].value == 1: 
 
 
    
 
-#清單金額填到請示單
-'''
+清單金額填到請示單
+
 mon = a.value // 10000
 senn = (a.value- mon*10000) // 1000
 hyaku = (a.value- mon*10000- senn*1000) // 100
@@ -110,9 +110,9 @@ elif ju == 0:
     ws2['N6'].value = None
 ws2['O6'].value = enn
 
-wb2.save(filename = '8-1-一般-ETAG.xlsx') '''
+wb2.save(filename = '8-1-一般-ETAG.xlsx') 
     
-    
+ ''' 
 
 
 
