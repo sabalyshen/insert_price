@@ -1,10 +1,10 @@
 #讀取檔案
 from openpyxl import load_workbook
-wb = load_workbook(filename = '110年零用金流向0610.xlsx')
+wb = load_workbook(filename = '110年零用金流向0610.xlsx', data_only=True)
 ws = wb['0804']
 
 from openpyxl import load_workbook
-wb2 = load_workbook(filename = '8-1-一般-ETAG.xlsx')
+wb2 = load_workbook(filename = '8-1-一般-ETAG.xlsx', data_only=True)
 ws2 = wb2['101年度大隊黏貼憑證用紙']
 
 # 依照項次加入品名
@@ -41,19 +41,37 @@ def wordfinder_type(searchString):
         for j in range(1, ws.max_column):
             if searchString == ws.cell(i,j).value:
                 list_type.append(ws.cell(i,j + 3).value)
-                ws2.cell(len(list_type) + 20, 10).value = ws.cell(i,j + 3).value
-
+                ws2.cell(len(list_type) + 20, 7).value = ws.cell(i,j + 3).value
 
 d = input('請輸入項次:')
 wordfinder(d)
 wordfinder_quantity(d)
 wordfinder_name(d)
 wordfinder_type(d)
-wb2.save(filename = '成品.xlsx')  
 
-ws2.cell(29, 1).value = '2. ■本案經詢價擬以' + 'ws2.cell(27, 17).value' + '元交由   交通部高速公路局  辦理，並經驗收合格後付款。' 
+#單價*數量
+multiply_price = [x*y for x,y in zip(list_price, list_quantity)]
+print(multiply_price)
+n = 0
+for i in multiply_price:
+    ws2.cell(n + 21, 17).value = i
+    n += 1
+
+
+'''    
+data_dic = {'總價':multiply_price}
+print(data_dic)
+import pandas
+df = pandas.DataFrame(data=data_dic)
+ws2.cell(21, 17).value = df
+wb2.save(filename = '成品.xlsx') '''
+
+sum_price = ws2.cell(27, 17).value
+print(sum_price)
+ws2.cell(29, 1).value = '2. ■本案經詢價擬以' + str(sum_price)+ '元交由   交通部高速公路局  辦理，並經驗收合格後付款。' 
 print(list_price) 
 print(len(list_price))
+
 wb2.save(filename = '成品.xlsx')  
  
 '''
