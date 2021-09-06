@@ -9,29 +9,35 @@ wb2 = load_workbook(filename = 'work_sample.xlsx', data_only=True)
 ws2 = wb2['sheet']
 
 #簽證號
+save_name = []
 def wordfinder_number(searchString):
     j = 1
     for i in range(1, ws.max_row):
         if searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '物品':
             ws2['U1'].value = '335-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－物品'
-            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '                   
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: ' 
+            save_name.append('物品')                  
         elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '一般':
             ws2['U1'].value = '396-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－一般事務費'
-            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: ' 
+            save_name.append('一般')         
         elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '電費':
             ws2['U1'].value = '213-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－水電費'
-            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '
+            save_name.append('電費')          
         elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '水費':
             ws2['U1'].value = '158-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－水費'
-            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: ' 
+            save_name.append('水費')         
         elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '電話':
             ws2['U1'].value = '278-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－通訊費'
             ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '
+            save_name.append('通訊費')  
 
 # 依照項次加入品名
 list_name = []
@@ -151,6 +157,6 @@ def wordfinder_save(searchString):
     for i in range(1, ws.max_row):
         for j in range(1, ws.max_column):
             if searchString == ws.cell(i,j).value:
-                wb2.save(filename = searchString +'.xlsx')
+                wb2.save(filename = searchString + save_name[0] +'.xlsx')
     
 wordfinder_save(d)
