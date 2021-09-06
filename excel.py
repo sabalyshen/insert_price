@@ -1,11 +1,37 @@
+import math
 #讀取檔案
 from openpyxl import load_workbook
 wb = load_workbook(filename = '110年零用金流向0610.xlsx', data_only=True)
-ws = wb['0804']
+ws = wb['work']
 
 from openpyxl import load_workbook
-wb2 = load_workbook(filename = '8-1-一般-ETAG.xlsx', data_only=True)
-ws2 = wb2['101年度大隊黏貼憑證用紙']
+wb2 = load_workbook(filename = 'work_sample.xlsx', data_only=True)
+ws2 = wb2['sheet']
+
+#簽證號
+def wordfinder_number(searchString):
+    j = 1
+    for i in range(1, ws.max_row):
+        if searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '物品':
+            ws2['U1'].value = '335-'
+            ws2['C6'].value = '消防業務－各救災救護大隊－業務費－物品'
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '                   
+        elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '一般':
+            ws2['U1'].value = '396-'
+            ws2['C6'].value = '消防業務－各救災救護大隊－業務費－一般事務費'
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
+        elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '電費':
+            ws2['U1'].value = '213-'
+            ws2['C6'].value = '消防業務－各救災救護大隊－業務費－水電費'
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
+        elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '水費':
+            ws2['U1'].value = '158-'
+            ws2['C6'].value = '消防業務－各救災救護大隊－業務費－水費'
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
+        elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '電話':
+            ws2['U1'].value = '278-'
+            ws2['C6'].value = '消防業務－各救災救護大隊－業務費－通訊費'
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '
 
 # 依照項次加入品名
 list_name = []
@@ -14,7 +40,7 @@ def wordfinder_name(searchString):
         for j in range(1, ws.max_column):
             if searchString == ws.cell(i,j).value:
                 list_name.append(ws.cell(i,j + 2).value)
-                ws2.cell(len(list_name) + 20, 1).value = ws.cell(i,j + 2).value
+                ws2.cell(len(list_name) + 20, 1).value = ws.cell(i,j + 2).value 
 
 # 依照項次加入單價
 list_price = []
@@ -43,45 +69,49 @@ def wordfinder_type(searchString):
                 list_type.append(ws.cell(i,j + 3).value)
                 ws2.cell(len(list_type) + 20, 7).value = ws.cell(i,j + 3).value
 
-d = input('請輸入項次:')
+# 加入廠商名稱
+list_vender = []
+def wordfinder_vender(searchString):
+    for i in range(1, ws.max_row):
+        for j in range(1, ws.max_column):
+            if searchString == ws.cell(i,j).value:
+                list_vender.append(ws.cell(i,j + 1).value)
+
+
+
+d = input('請問這次要印的請示單是: ')
+type_list = []
+type_list.append(d)
 wordfinder(d)
 wordfinder_quantity(d)
 wordfinder_name(d)
 wordfinder_type(d)
+wordfinder_vender(d)
+wordfinder_number(d)
 
-#單價*數量
-multiply_price = [x*y for x,y in zip(list_price, list_quantity)]
-print(multiply_price)
+#單價乘數量
+total_price = [x*y for x,y in zip(list_quantity,list_price)]
 n = 0
-for i in multiply_price:
-    ws2.cell(n + 21, 17).value = i
+for i in total_price:
+    ws2.cell(n + 21, 17).value = round(i) 
     n += 1
 
+#金額總和
+listSum = sum(total_price)
+listSum = round(listSum)
+print(listSum)
+ws2.cell(27, 17).value = str(listSum)
 
-'''    
-data_dic = {'總價':multiply_price}
-print(data_dic)
-import pandas
-df = pandas.DataFrame(data=data_dic)
-ws2.cell(21, 17).value = df
-wb2.save(filename = '成品.xlsx') '''
+#下方欄
+ws2.cell(29, 1).value = '2. ■本案經詢價擬以' + str(ws2.cell(27, 17).value) + '元交由 ' + list_vender[0] +' 辦理，並經驗收合格後付款。' 
 
-sum_price = ws2.cell(27, 17).value
-print(sum_price)
-ws2.cell(29, 1).value = '2. ■本案經詢價擬以' + str(sum_price)+ '元交由   交通部高速公路局  辦理，並經驗收合格後付款。' 
-print(list_price) 
-print(len(list_price))
+#清單金額填到請示單
 
-wb2.save(filename = '成品.xlsx')  
- 
-'''
-清單金額填到請示單
-
-mon = a.value // 10000
-senn = (a.value- mon*10000) // 1000
-hyaku = (a.value- mon*10000- senn*1000) // 100
-ju = (a.value- mon*10000- senn*1000- hyaku*100) // 10
-enn = a.value % 10
+mon = listSum // 10000
+senn = (listSum - mon * 10000) // 1000
+hyaku = (listSum - mon * 10000- senn * 1000) // 100
+ju = (listSum - mon * 10000 - senn * 1000 - hyaku * 100) // 10
+enn = listSum % 10
 
 if mon > 0: #萬
     ws2['K6'].value = mon
@@ -115,12 +145,12 @@ elif ju == 0 and hyaku > 0:
 elif ju == 0:
     ws2['N6'].value = None
 ws2['O6'].value = enn
-   
- ''' 
 
-
-
-
-
-
+#存檔
+def wordfinder_save(searchString):
+    for i in range(1, ws.max_row):
+        for j in range(1, ws.max_column):
+            if searchString == ws.cell(i,j).value:
+                wb2.save(filename = searchString +'.xlsx')
     
+wordfinder_save(d)
