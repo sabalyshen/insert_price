@@ -1,43 +1,37 @@
 import math
 #讀取檔案
 from openpyxl import load_workbook
+from openpyxl.styles import Border, Side
+
 wb = load_workbook(filename = '110年零用金流向0610.xlsx', data_only=True)
 ws = wb['work']
-
-from openpyxl import load_workbook
 wb2 = load_workbook(filename = 'work_sample.xlsx', data_only=True)
 ws2 = wb2['sheet']
 
 #簽證號
-save_name = []
 def wordfinder_number(searchString):
     j = 1
     for i in range(1, ws.max_row):
         if searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '物品':
             ws2['U1'].value = '335-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－物品'
-            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: ' 
-            save_name.append('物品')                  
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '                   
         elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '一般':
             ws2['U1'].value = '396-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－一般事務費'
-            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: ' 
-            save_name.append('一般')         
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
         elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '電費':
             ws2['U1'].value = '213-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－水電費'
-            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '
-            save_name.append('電費')          
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
         elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '水費':
             ws2['U1'].value = '158-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－水費'
-            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: ' 
-            save_name.append('水費')         
+            ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '        
         elif searchString == ws.cell(i,j).value and ws.cell(i,j + 6).value == '電話':
             ws2['U1'].value = '278-'
             ws2['C6'].value = '消防業務－各救災救護大隊－業務費－通訊費'
             ws2['P6'].value = ws.cell(i,j + 7).value + '\n代墊人: '
-            save_name.append('通訊費')  
 
 # 依照項次加入品名
 list_name = []
@@ -82,6 +76,18 @@ def wordfinder_vender(searchString):
         for j in range(1, ws.max_column):
             if searchString == ws.cell(i,j).value:
                 list_vender.append(ws.cell(i,j + 1).value)
+
+'''type_item = []
+with open('type.csv', 'r', encoding = 'utf8') as f:
+    for d in f:
+        d = d.replace('\n', '')
+        type_item.append(d)
+        print(d)
+
+while True:
+    input_item = input('是否製作請示單: (y/n)')'''
+
+
 
 
 
@@ -157,6 +163,12 @@ def wordfinder_save(searchString):
     for i in range(1, ws.max_row):
         for j in range(1, ws.max_column):
             if searchString == ws.cell(i,j).value:
-                wb2.save(filename = searchString + save_name[0] +'.xlsx')
-    
+                wb2.save(filename = searchString +'.xlsx')
+
+bian = Side(style='thin', color='000000') 
+border = Border(top=bian, bottom=bian, left=bian, right=bian, diagonal=bian, diagonalDown=True)
+ws2['B13'].border = border
+ws2['B15'].border = border
+ws2['B33'].border = border
+ws2['B34'].border = border
 wordfinder_save(d)
